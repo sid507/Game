@@ -35,6 +35,7 @@ for i in range (height):
 g=1
 jump=0
 direction=0
+flag=0
 #--------------------------------------Loop of Trials---------------------------------------------------
 while 1: 
     for event in pygame.event.get():
@@ -45,16 +46,16 @@ while 1:
     
     if(trials!=1):
         
-        #playerrect = player.get_rect()
-        playerrect=playerrect.move([300,75])
+        playerrect = player.get_rect()
+        playerrect=playerrect.move([50,325])
         
         
     #------------------------------------Game Loop-------------------------------------------------
     while 1:
         direction=0
         bottom_sensor=[int(playerrect.centerx),int(playerrect.centery)+35]
-        left_sensor=[int(playerrect.centerx- 45),int(playerrect.centery)]
-        right_sensor=[int(playerrect.centerx+45),int(playerrect.centery)]
+        left_sensor=[int(playerrect.centerx- 35),int(playerrect.centery)]
+        right_sensor=[int(playerrect.centerx+35),int(playerrect.centery)]
         up_sensor=[int(playerrect.centerx),int(playerrect.centery)-20]
         events = pygame.event.get()
         
@@ -70,9 +71,11 @@ while 1:
        
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            direction=-1
+            if(left_sensor[0]>0):
+                direction=-1
         if keys[pygame.K_RIGHT]:
-            direction=1
+            if(right_sensor[0]<width):
+                direction=1
         
         if(level.get_at(bottom_sensor)!=(0,0,0,255)):
             g=2
@@ -85,11 +88,17 @@ while 1:
         
         #screen.fill("level.png")
         screen.blit(level,[0,0])
-        
-        screen.blit(player, playerrect)
         screen.blit(goal,goalrect)
+        screen.blit(player, playerrect)
+        if(playerrect.collidepoint([goalrect.centerx,goalrect.centery])):
+            screen.blit(victory,[250,200])
+            flag=1
         pygame.display.flip()
         time.sleep(0.01)
+        if(flag==1):
+                time.sleep(1)
+                flag=0
+                break
     #--------------------------------End Of Game Loop----------------------------
     #write_list(feedback,choice)
 #----------------------------------------End of All Trials-----------------------------------------------------    
